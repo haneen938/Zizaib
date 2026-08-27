@@ -1,0 +1,40 @@
+.curved-loop-jacket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: visible;
+  padding-block: 0.5rem;
+}
+
+.curved-loop-svg {
+  user-select: none;
+  width: 100%;
+  aspect-ratio: 100 / 12;
+  overflow: visible;
+  display: block;
+  font-size: 6rem;
+  fill: currentColor;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+}
+/* High-visibility banner: bolder strokes + soft shine */
+text.curved-banner {
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  paint-order: stroke fill;
+  fill: #478053;
+  stroke: #3f7449;
+  stroke-width: 0.8px;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9))
+    drop-shadow(0 3px 10px rgba(106, 168, 119, 0.35));
+}
+
+@media (max-width: 640px) {
+  .curved-loop-svg {
+    aspect-ratio: 100 / 18;
+  }
+}
