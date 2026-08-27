@@ -27,6 +27,11 @@ const categoryIcon: Record<Category, LucideIcon> = {
   bouquets: Flower2,
   watches: Watch,
   diaries: BookOpen,
+  jewelry: Gem,
+  leather: Briefcase,
+  "market-bags": ShoppingBasket,
+  "canvas-totes": Package,
+  "grocery-pouches": Apple,
 };
 
 const search = z.object({
