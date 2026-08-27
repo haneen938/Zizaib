@@ -1,0 +1,1 @@
+ALTER TABLE public.product_reviews ADD COLUMN IF NOT EXISTS image_urls text[] NOT NULL DEFAULT '{}'::text[];
