@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { Smartphone, Wallet, KeyRound, Flower2, ShoppingBag, Home, Sparkles, Watch, BookOpen, Glasses, Gem, Briefcase, ShoppingBasket, Apple, Package } from "lucide-react";
+import { Smartphone, Wallet, KeyRound, Flower2, ShoppingBag, Home, Sparkles, Watch, BookOpen, Glasses, Gem, Briefcase, ShoppingCart, Package } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { products, categoryLabel, matchesGender, type Category, type Gender, type PouchSub } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
@@ -29,9 +29,9 @@ const categoryIcon: Record<Category, LucideIcon> = {
   diaries: BookOpen,
   jewelry: Gem,
   leather: Briefcase,
-  "market-bags": ShoppingBasket,
-  "canvas-totes": Package,
-  "grocery-pouches": Apple,
+  "market-bags": ShoppingCart,
+  "canvas-totes": ShoppingBag,
+  "grocery-pouches": Package,
 };
 
 const search = z.object({
