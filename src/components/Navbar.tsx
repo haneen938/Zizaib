@@ -2,14 +2,23 @@ const zizaibLogo = { url: "/photos/brand/zizaib-z-logo.png" };
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { ShoppingBag, Menu, X, Search, Heart, ChevronDown } from "lucide-react";
-import { useState } from "react";
-import { categoryGroups, categoryThumb, labelFor } from "@/data/categories";
+import { useMemo, useState } from "react";
+import { collections, type CollectionId, type SubcategoryId } from "@/data/taxonomy";
+import { products, safeImage, taxonOf } from "@/data/products";
 import { useCart, useCartCount } from "@/store/cartStore";
 import { CurrencySwitcher } from "@/components/CurrencySwitcher";
 import { useAutoDetectCurrency } from "@/store/currencyStore";
 import CircularText from "@/components/CircularText";
 
-// Zizaib sticky navbar with animated cart, inline search, mobile menu.
+// Flat links that sit after the collection menus in the bar.
+const flatLinks = [
+  { to: "/new-arrivals", label: "New Arrivals" },
+  { to: "/best-sellers", label: "Best Sellers" },
+  { to: "/sale", label: "Sale" },
+] as const;
+
+// Zizaib sticky navbar: Home | Bags | Jewelry | Clothing | Crochet | Makeup |
+// New Arrivals | Best Sellers | Sale.
 export function Navbar() {
   useAutoDetectCurrency();
   const count = useCartCount();
@@ -18,17 +27,17 @@ export function Navbar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<CollectionId | null>(null);
 
-  const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/shop", label: "Shop All" },
-    { to: "/new-arrivals", label: "New Arrivals" },
-    { to: "/best-sellers", label: "Best Sellers" },
-    { to: "/about", label: "About Us" },
-    { to: "/join", label: "Join Us" },
-  ] as const;
-
+  // First real photo found in each subcategory, used as the menu thumbnail.
+  const subThumb = useMemo(() => {
+    const map = new Map<SubcategoryId, string>();
+    for (const p of products) {
+      const key = taxonOf(p);
+      if (!map.has(key)) map.set(key, safeImage(p, p.variants[0]?.image));
+    }
+    return map;
+  }, []);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,60 +70,85 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-6 text-sm font-medium">
-          {categoryGroups.map((grp) => (
+        <div className="hidden xl:flex items-center gap-5 text-sm font-medium">
+          <Link
+            to="/"
+            className="story-link text-muted-foreground hover:text-foreground transition"
+            activeProps={{ className: "text-foreground" }}
+            activeOptions={{ exact: true }}
+          >
+            Home
+          </Link>
+
+          {collections.map((col) => (
             <div
-              key={grp.id}
+              key={col.id}
               className="relative"
-              onMouseEnter={() => setOpenMenu(grp.id)}
+              onMouseEnter={() => setOpenMenu(col.id)}
               onMouseLeave={() => setOpenMenu(null)}
             >
-              <button
-                type="button"
-                aria-expanded={openMenu === grp.id}
-                onClick={() => setOpenMenu((v) => (v === grp.id ? null : grp.id))}
+              <Link
+                to="/shop"
+                search={{ col: col.id }}
+                aria-expanded={openMenu === col.id}
+                onClick={() => setOpenMenu(null)}
                 className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition"
               >
-                {grp.label}
-                <ChevronDown className={`size-3.5 transition-transform ${openMenu === grp.id ? "rotate-180" : ""}`} />
-              </button>
+                {col.label}
+                <ChevronDown className={`size-3.5 transition-transform ${openMenu === col.id ? "rotate-180" : ""}`} />
+              </Link>
               <AnimatePresence>
-                {openMenu === grp.id && (
+                {openMenu === col.id && (
                   <motion.div
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.16 }}
-                    className="absolute left-0 top-full z-50 pt-3"
+                    className="absolute left-1/2 -translate-x-1/2 top-full z-50 pt-3"
                   >
-                    <div className="w-[520px] rounded-2xl border border-pink-200 bg-background p-4 shadow-xl">
-                      <p className="px-1 pb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">{grp.blurb}</p>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        {grp.children.map((cat) => {
-                          const thumb = categoryThumb(cat);
-                          return (
+                    <div className="w-[640px] rounded-2xl border border-pink-200 bg-background p-5 shadow-xl">
+                      <p className="px-1 pb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">{col.blurb}</p>
+                      <div className="grid grid-cols-3 gap-4">
+                        {col.groups.map((grp) => (
+                          <div key={grp.id}>
                             <Link
-                              key={cat}
                               to="/shop"
-                              search={{ c: cat, group: grp.id }}
+                              search={{ col: col.id, grp: grp.id }}
                               onClick={() => setOpenMenu(null)}
-                              className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-muted transition"
+                              className="block text-sm font-bold text-foreground hover:text-primary transition"
                             >
-                              {thumb && (
-                                <img src={thumb} alt="" loading="lazy" className="size-10 rounded-lg object-cover" />
-                              )}
-                              <span className="text-sm text-foreground">{labelFor(cat)}</span>
+                              {grp.label}
                             </Link>
-                          );
-                        })}
+                            <ul className="mt-2 space-y-1">
+                              {grp.subs.map((s) => {
+                                const thumb = subThumb.get(s.id);
+                                return (
+                                  <li key={s.id}>
+                                    <Link
+                                      to="/shop"
+                                      search={{ col: col.id, grp: grp.id, sub: s.id }}
+                                      onClick={() => setOpenMenu(null)}
+                                      className="flex items-center gap-2 rounded-lg px-1.5 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition"
+                                    >
+                                      {thumb && (
+                                        <img src={thumb} alt="" loading="lazy" className="size-8 rounded-md object-cover" />
+                                      )}
+                                      {s.label}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
                       <Link
                         to="/shop"
-                        search={{ group: grp.id }}
+                        search={{ col: col.id }}
                         onClick={() => setOpenMenu(null)}
-                        className="mt-3 inline-block px-1 text-sm font-semibold text-primary"
+                        className="mt-4 inline-block px-1 text-sm font-semibold text-primary"
                       >
-                        See all {grp.label.toLowerCase()} pieces
+                        See everything in {col.label}
                       </Link>
                     </div>
                   </motion.div>
@@ -122,7 +156,8 @@ export function Navbar() {
               </AnimatePresence>
             </div>
           ))}
-          {navLinks.map((l) => (
+
+          {flatLinks.map((l) => (
             <Link
               key={l.to}
               to={l.to}
@@ -134,12 +169,12 @@ export function Navbar() {
           ))}
         </div>
 
-        <form onSubmit={onSearch} className="hidden md:flex items-center gap-1 rounded-full bg-muted/70 px-3 py-1.5 flex-1 max-w-xs">
+        <form onSubmit={onSearch} className="hidden md:flex items-center gap-1 rounded-full bg-muted/70 px-3 py-1.5 flex-1 max-w-[180px]">
           <Search className="size-4 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search the edit…"
+            placeholder="Search…"
             className="bg-transparent text-sm placeholder:text-muted-foreground outline-none flex-1 min-w-0"
             aria-label="Search products"
           />
@@ -173,7 +208,7 @@ export function Navbar() {
             </AnimatePresence>
           </motion.button>
           <button
-            className="lg:hidden rounded-full p-2.5 hover:bg-muted"
+            className="xl:hidden rounded-full p-2.5 hover:bg-muted"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -181,13 +216,14 @@ export function Navbar() {
           </button>
         </div>
       </nav>
+
       <AnimatePresence>
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden overflow-hidden border-t border-pink-200/80"
+            className="xl:hidden overflow-hidden border-t border-pink-200/80"
           >
             <div className="container-page py-4 flex flex-col gap-3">
               <form onSubmit={onSearch} className="flex items-center gap-1 rounded-full bg-muted px-3 py-2 md:hidden">
@@ -199,37 +235,57 @@ export function Navbar() {
                   className="bg-transparent text-sm placeholder:text-muted-foreground outline-none flex-1 min-w-0"
                 />
               </form>
-              {navLinks.map((l) => (
-                <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="text-foreground py-1.5 flex items-center gap-2">
-                  <Heart className="size-3.5 text-primary" /> {l.label}
-                </Link>
-              ))}
-              {categoryGroups.map((grp) => (
-                <div key={grp.id} className="border-t border-pink-200/70 pt-2">
+
+              <Link to="/" onClick={() => setOpen(false)} className="text-foreground py-1.5 flex items-center gap-2">
+                <Heart className="size-3.5 text-primary" /> Home
+              </Link>
+
+              {collections.map((col) => (
+                <div key={col.id} className="border-t border-pink-200/70 pt-2">
                   <button
                     type="button"
-                    onClick={() => setOpenMenu((v) => (v === grp.id ? null : grp.id))}
+                    onClick={() => setOpenMenu((v) => (v === col.id ? null : col.id))}
                     className="flex w-full items-center justify-between py-1.5 text-foreground"
                   >
-                    <span className="flex items-center gap-2"><Heart className="size-3.5 text-primary" /> {grp.label}</span>
-                    <ChevronDown className={`size-4 transition-transform ${openMenu === grp.id ? "rotate-180" : ""}`} />
+                    <span className="flex items-center gap-2"><Heart className="size-3.5 text-primary" /> {col.label}</span>
+                    <ChevronDown className={`size-4 transition-transform ${openMenu === col.id ? "rotate-180" : ""}`} />
                   </button>
-                  {openMenu === grp.id && (
-                    <div className="pl-6 pb-2 flex flex-col gap-1.5">
-                      {grp.children.map((cat) => (
-                        <Link
-                          key={cat}
-                          to="/shop"
-                          search={{ c: cat, group: grp.id }}
-                          onClick={() => { setOpen(false); setOpenMenu(null); }}
-                          className="text-sm text-muted-foreground hover:text-foreground py-1"
-                        >
-                          {labelFor(cat)}
-                        </Link>
+                  {openMenu === col.id && (
+                    <div className="pl-6 pb-2 space-y-3">
+                      {col.groups.map((grp) => (
+                        <div key={grp.id}>
+                          <Link
+                            to="/shop"
+                            search={{ col: col.id, grp: grp.id }}
+                            onClick={() => setOpen(false)}
+                            className="block text-sm font-semibold text-foreground"
+                          >
+                            {grp.label}
+                          </Link>
+                          <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                            {grp.subs.map((s) => (
+                              <Link
+                                key={s.id}
+                                to="/shop"
+                                search={{ col: col.id, grp: grp.id, sub: s.id }}
+                                onClick={() => setOpen(false)}
+                                className="text-xs text-muted-foreground hover:text-primary"
+                              >
+                                {s.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
                   )}
                 </div>
+              ))}
+
+              {flatLinks.map((l) => (
+                <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="text-foreground py-1.5 flex items-center gap-2">
+                  <Heart className="size-3.5 text-primary" /> {l.label}
+                </Link>
               ))}
               <div className="sm:hidden pt-1"><CurrencySwitcher /></div>
             </div>

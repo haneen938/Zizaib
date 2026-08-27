@@ -1,6 +1,9 @@
 // Zizaib — handmade crochet catalog for Pakistan.
 // Prices in PKR. Each product has 3 color variants; selecting a color
 // updates the displayed image to the matching swatch.
+import { extraProducts } from "./products.extra";
+import type { SubcategoryId } from "./taxonomy";
+
 export type Category =
   | "phone"
   | "pouches"
@@ -18,14 +21,18 @@ export type Category =
   | "grocery-pouches"
   | "market-bags"
   // Gold-tone jewellery (bangles, chain bracelets, rings).
-  | "jewelry";
+  | "jewelry"
+  // Stitched clothing — dresses, traditional wear, bottoms.
+  | "clothing"
+  // Beauty — face, eye and lip makeup.
+  | "makeup";
 
 /**
  * What the product is physically made of. This drives the image-safety check
  * below: a photo from the crochet folder can never be attached to a leather
  * product, and vice versa.
  */
-export type Material = "crochet" | "leather" | "canvas" | "metal";
+export type Material = "crochet" | "leather" | "canvas" | "metal" | "fabric" | "cosmetic";
 
 
 export interface ColorVariant {
@@ -53,6 +60,10 @@ export interface Product {
   /** Overrides the material implied by the category. */
   material?: Material;
   sub?: PouchSub; // pouches sub-category: "phone" or "glasses"
+  /** Where this product sits in the site taxonomy (see data/taxonomy.ts). */
+  taxon?: SubcategoryId;
+  /** Discounted price in PKR. When set, the product shows up under /sale. */
+  salePrice?: number;
 
   description: string;
   longDescription: string;
@@ -156,7 +167,7 @@ const pinkGrannyDiary = { url: "/photos/diaries/pink-medallion-diary.jpeg" };
 const greenDaisyGrannyDiary = { url: "/photos/diaries/green-daisy-granny-diary.jpeg" };
 const greenCreamGrannyDiary = { url: "/photos/diaries/green-cream-granny-diary.jpeg" };
 
-export const products: Product[] = [
+const baseProducts: Product[] = [
   // — Phone covers —
   {
     id: "blossom-phone-cover",
@@ -1963,6 +1974,8 @@ export const categoryLabel: Record<Category, string> = {
   "grocery-pouches": "Grocery Pouches",
   "market-bags": "Reusable Market Bags",
   jewelry: "Gold Jewellery",
+  clothing: "Clothing",
+  makeup: "Makeup",
 };
 
 // ——— Material safety net ———
@@ -1984,12 +1997,16 @@ export const categoryMaterial: Record<Category, Material> = {
   "grocery-pouches": "canvas",
   "market-bags": "canvas",
   jewelry: "metal",
+  clothing: "fabric",
+  makeup: "cosmetic",
 };
 
 const MATERIAL_IMAGE_ROOTS: Record<Material, string[]> = {
   leather: ["/photos/leather/"],
   canvas: ["/photos/grocery/"],
   metal: ["/photos/jewelry/"],
+  fabric: ["/photos/clothing/"],
+  cosmetic: ["/photos/makeup/"],
   // Crochet keeps its historic per-category folders.
   crochet: [
     "/photos/bags/",
@@ -2002,6 +2019,7 @@ const MATERIAL_IMAGE_ROOTS: Record<Material, string[]> = {
     "/photos/wrist/",
     "/photos/diaries/",
     "/photos/studio/",
+    "/photos/clothing/",
   ],
 };
 
@@ -2036,3 +2054,35 @@ export function auditCatalogImages(): string[] {
   }
   return problems;
 }
+
+// ——— Taxonomy placement ———
+// Legacy catalog products carry an old `category`; this map remaps every one of
+// them onto the hardcoded taxonomy in data/taxonomy.ts. Newer products set
+// `taxon` explicitly and win over this default.
+export const DEFAULT_TAXON: Record<Category, SubcategoryId> = {
+  phone: "crochet-mini-bags",
+  pouches: "crochet-mini-bags",
+  keychains: "crochet-keychains",
+  hair: "crochet-hair-accessories",
+  bags: "crochet-tote-bags",
+  home: "crochet-keychains",
+  bouquets: "crochet-keychains",
+  watches: "crochet-jewelry",
+  diaries: "crochet-keychains",
+  leather: "bags-shoulder-bags",
+  "canvas-totes": "bags-tote-bags",
+  "grocery-pouches": "bags-mini-bags",
+  "market-bags": "bags-woven-bags",
+  jewelry: "jewelry-bracelets",
+  clothing: "clothing-dresses",
+  makeup: "makeup-lipstick",
+};
+
+/** The single subcategory a product belongs to. Never guessed at render time. */
+export const taxonOf = (p: Product): SubcategoryId => p.taxon ?? DEFAULT_TAXON[p.category];
+
+/** Products discounted right now. */
+export const isOnSale = (p: Product) => typeof p.salePrice === "number" && p.salePrice < p.price;
+
+/** Full catalog: legacy pieces plus the new Bags / Jewelry / Clothing / Makeup lines. */
+export const products: Product[] = [...baseProducts, ...extraProducts];

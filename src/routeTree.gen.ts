@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SaleRouteImport } from './routes/sale'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as ConfirmationRouteImport } from './routes/confirmation'
@@ -29,6 +30,11 @@ const TrackRoute = TrackRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaleRoute = SaleRouteImport.update({
+  id: '/sale',
+  path: '/sale',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/confirmation': typeof ConfirmationRoute
   '/join': typeof JoinRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/sale': typeof SaleRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/confirmation': typeof ConfirmationRoute
   '/join': typeof JoinRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/sale': typeof SaleRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/confirmation': typeof ConfirmationRoute
   '/join': typeof JoinRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/sale': typeof SaleRoute
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/join'
     | '/new-arrivals'
+    | '/sale'
     | '/shop'
     | '/track'
     | '/products/$id'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/join'
     | '/new-arrivals'
+    | '/sale'
     | '/shop'
     | '/track'
     | '/products/$id'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/join'
     | '/new-arrivals'
+    | '/sale'
     | '/shop'
     | '/track'
     | '/products/$id'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   ConfirmationRoute: typeof ConfirmationRoute
   JoinRoute: typeof JoinRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
+  SaleRoute: typeof SaleRoute
   ShopRoute: typeof ShopRoute
   TrackRoute: typeof TrackRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sale': {
+      id: '/sale'
+      path: '/sale'
+      fullPath: '/sale'
+      preLoaderRoute: typeof SaleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/new-arrivals': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfirmationRoute: ConfirmationRoute,
   JoinRoute: JoinRoute,
   NewArrivalsRoute: NewArrivalsRoute,
+  SaleRoute: SaleRoute,
   ShopRoute: ShopRoute,
   TrackRoute: TrackRoute,
   ProductsIdRoute: ProductsIdRoute,
