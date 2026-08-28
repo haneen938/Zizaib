@@ -10,132 +10,17 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
-      orders: {
-        Row: {
-          address: string
-          cash_bank_name: string | null
-          cash_receipt_url: string | null
-          cash_reference_id: string | null
-          cash_sender_name: string | null
-          cash_transfer_date: string | null
-          city: string
-          created_at: string
-          customer_name: string
-          email: string
-          id: string
-          items: Json
-          notes: string | null
-          payment_method: string
-          phone: string
-          postal: string | null
-          status: string
-          total: number
-          tracking_number: string
-          updated_at: string
-        }
-        Insert: {
-          address: string
-          cash_bank_name?: string | null
-          cash_receipt_url?: string | null
-          cash_reference_id?: string | null
-          cash_sender_name?: string | null
-          cash_transfer_date?: string | null
-          city: string
-          created_at?: string
-          customer_name: string
-          email: string
-          id?: string
-          items?: Json
-          notes?: string | null
-          payment_method: string
-          phone: string
-          postal?: string | null
-          status?: string
-          total?: number
-          tracking_number?: string
-          updated_at?: string
-        }
-        Update: {
-          address?: string
-          cash_bank_name?: string | null
-          cash_receipt_url?: string | null
-          cash_reference_id?: string | null
-          cash_sender_name?: string | null
-          cash_transfer_date?: string | null
-          city?: string
-          created_at?: string
-          customer_name?: string
-          email?: string
-          id?: string
-          items?: Json
-          notes?: string | null
-          payment_method?: string
-          phone?: string
-          postal?: string | null
-          status?: string
-          total?: number
-          tracking_number?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      product_reviews: {
-        Row: {
-          comment: string
-          created_at: string
-          email: string
-          id: string
-          image_url: string | null
-          image_urls: string[]
-          name: string
-          product_id: string
-          rating: number
-        }
-        Insert: {
-          comment: string
-          created_at?: string
-          email: string
-          id?: string
-          image_url?: string | null
-          image_urls?: string[]
-          name?: string
-          product_id: string
-          rating?: number
-        }
-        Update: {
-          comment?: string
-          created_at?: string
-          email?: string
-          id?: string
-          image_url?: string | null
-          image_urls?: string[]
-          name?: string
-          product_id?: string
-          rating?: number
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      generate_tracking_number: { Args: never; Returns: string }
-      track_order: {
-        Args: { _tracking_number: string }
-        Returns: {
-          city: string
-          item_count: number
-          placed_at: string
-          status: string
-          tracking_number: string
-          updated_at: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
