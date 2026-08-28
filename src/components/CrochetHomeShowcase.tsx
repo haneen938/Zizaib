@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import type { SubcategoryId } from "@/data/taxonomy";
 
-type ShopCategory = "phone" | "pouches" | "keychains" | "hair" | "bags" | "home" | "bouquets" | "watches" | "diaries";
+type ShopCategory = SubcategoryId;
 
 type Slide = {
   category: string;
@@ -15,15 +16,15 @@ type Slide = {
 
 const products: Slide[] = [
   { category: "All", name: "Signature Crochet Collection", price: "$24.99", img: "/photos/bouquets/daisy-kraft-bouquet.jpeg" },
-  { category: "Phone Covers", c: "phone", name: "Pastel Crochet Phone Sleeve", price: "$14.99", img: "/photos/phone/butter-tulip.jpeg" },
-  { category: "Pouches", c: "pouches", name: "Handmade Cosmetic Pouch", price: "$19.99", img: "/photos/pouches/blush-stripe-drawstring.jpeg" },
-  { category: "Keychains", c: "keychains", name: "Amigurumi Mini Keychain", price: "$7.99", img: "/photos/keychains/avocado-pair.jpeg" },
-  { category: "Hair Accessories", c: "hair", name: "Crochet Floral Hair Band", price: "$11.49", img: "/photos/hair/daisy-headband-set.jpeg" },
-  { category: "Bags", c: "bags", name: "Boho Crochet Tote Bag", price: "$34.99", img: "/photos/bags/daisy-sage-tote.jpeg" },
-  { category: "Home Accessories", c: "home", name: "Cozy Knit Coaster Set", price: "$12.99", img: "/photos/home/daisy-tieback.jpeg" },
-  { category: "Flower Bouquets", c: "bouquets", name: "Forever Tulip Crochet Bouquet", price: "$29.99", img: "/photos/bouquets/lavender-lily-bouquet.jpeg" },
-  { category: "Bracelets & Watch Straps", c: "watches", name: "Woven Watch Band & Strap", price: "$16.99", img: "/photos/wrist/nato-stripe-watch-strap.jpeg" },
-  { category: "Diaries & Book Covers", c: "diaries", name: "Vintage Premium Book Sleeve", price: "$21.99", img: "/photos/diaries/pink-daisy-diary.jpeg" },
+  { category: "Phone Covers", c: "crochet-keychains", name: "Pastel Crochet Phone Sleeve", price: "$14.99", img: "/photos/phone/butter-tulip.jpeg" },
+  { category: "Pouches", c: "crochet-mini-bags", name: "Handmade Cosmetic Pouch", price: "$19.99", img: "/photos/pouches/blush-stripe-drawstring.jpeg" },
+  { category: "Keychains", c: "crochet-keychains", name: "Amigurumi Mini Keychain", price: "$7.99", img: "/photos/keychains/avocado-pair.jpeg" },
+  { category: "Hair Accessories", c: "crochet-hair-accessories", name: "Crochet Floral Hair Band", price: "$11.49", img: "/photos/hair/daisy-headband-set.jpeg" },
+  { category: "Bags", c: "crochet-tote-bags", name: "Boho Crochet Tote Bag", price: "$34.99", img: "/photos/bags/daisy-sage-tote.jpeg" },
+  { category: "Home Accessories", c: "crochet-jewelry", name: "Cozy Knit Coaster Set", price: "$12.99", img: "/photos/home/daisy-tieback.jpeg" },
+  { category: "Flower Bouquets", c: "crochet-jewelry", name: "Forever Tulip Crochet Bouquet", price: "$29.99", img: "/photos/bouquets/lavender-lily-bouquet.jpeg" },
+  { category: "Bracelets & Watch Straps", c: "crochet-jewelry", name: "Woven Watch Band & Strap", price: "$16.99", img: "/photos/wrist/nato-stripe-watch-strap.jpeg" },
+  { category: "Diaries & Book Covers", c: "crochet-mini-bags", name: "Vintage Premium Book Sleeve", price: "$21.99", img: "/photos/diaries/pink-daisy-diary.jpeg" },
 ];
 
 export default function CrochetHomeShowcase() {
@@ -46,7 +47,7 @@ export default function CrochetHomeShowcase() {
   const current = products[index];
 
   const goToCategory = (c?: ShopCategory) => {
-    navigate({ to: "/shop", search: c ? { c } : {} });
+    navigate({ to: "/shop", search: c ? { sub: c } : { col: "crochet" as const } });
   };
 
   return (

@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ArrowRight, Truck, ShieldCheck, Heart, Sparkles, Globe2 } from "lucide-react";
 const heroFashion = "/photos/hero-fashion.jpg";
-import { products, categoryLabel, type Category } from "@/data/products";
+import { products, taxonOf } from "@/data/products";
+import { collections, collectionOfSub } from "@/data/taxonomy";
 import { ProductCard } from "@/components/ProductCard";
 import { Testimonials } from "@/components/Testimonials";
 import { TrendPulse } from "@/components/TrendPulse";
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const featuredCategories: Category[] = ["pouches", "bouquets", "hair", "bags", "keychains", "phone"];
+
 
 function Home() {
   const bestSellers = products.filter((p) => p.badge === "Bestseller");
@@ -164,19 +165,20 @@ function CategoryStrip() {
         <h2 className="mt-2 font-display text-3xl md:text-4xl font-semibold">Shop by category</h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        {featuredCategories.map((c) => {
-          const sample = products.find((p) => p.category === c)!;
+        {collections.map((c) => {
+          const sample = products.find((p) => collectionOfSub(taxonOf(p))?.id === c.id);
+          if (!sample) return null;
           return (
             <Link
-              key={c}
+              key={c.id}
               to="/shop"
-              search={{ c }}
+              search={{ col: c.id }}
               className="card-soft overflow-hidden group"
             >
               <div className="aspect-square overflow-hidden">
-                <img src={sample.variants[0].image} alt={categoryLabel[c]} className="size-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={sample.variants[0].image} alt={c.label} className="size-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
-              <p className="p-3 text-sm font-semibold text-center">{categoryLabel[c]}</p>
+              <p className="p-3 text-sm font-semibold text-center">{c.label}</p>
             </Link>
           );
         })}
