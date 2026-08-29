@@ -28,17 +28,18 @@ export function CurrencySwitcher() {
   const codes = Object.keys(CURRENCIES) as CurrencyCode[];
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative z-[70] shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Currency: ${active.label}`}
-        className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/60 px-3 py-1.5 text-xs font-medium tracking-wide hover:bg-muted transition"
+        className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border-2 border-primary bg-card px-2.5 py-1.5 text-xs font-semibold tracking-wide text-foreground shadow-[var(--shadow-soft)] transition hover:bg-muted sm:px-3.5 sm:text-sm"
       >
-        <Globe className="size-3.5 text-primary" />
-        <span>{active.label}</span>
+        <Globe className="size-4 shrink-0 text-primary" />
+        <span className="sm:hidden">{active.code}</span>
+        <span className="hidden sm:inline whitespace-nowrap">{active.label}</span>
       </button>
       <AnimatePresence>
         {open && (
@@ -48,8 +49,9 @@ export function CurrencySwitcher() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-48 rounded-2xl border border-border/70 bg-card shadow-[var(--shadow-lift)] p-1.5 z-50"
+            className="absolute right-0 mt-2 w-[min(12rem,calc(100vw-2rem))] rounded-2xl border-2 border-primary/70 bg-popover shadow-[var(--shadow-lift)] p-1.5 z-[80]"
           >
+
             {codes.map((c) => {
               const meta = CURRENCIES[c];
               const selected = c === code;
