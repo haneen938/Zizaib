@@ -60,6 +60,9 @@ export type SubcategoryId =
   | "clothing-trousers"
   | "clothing-skirts"
   | "clothing-co-ord-sets"
+  | "clothing-mens-jackets"
+  | "clothing-mens-coats"
+  | "clothing-mens-trench-coats"
   // Crochet
   | "crochet-tote-bags"
   | "crochet-shoulder-bags"
@@ -182,6 +185,15 @@ export const collections: Collection[] = [
           { id: "clothing-trousers", label: "Trousers" },
           { id: "clothing-skirts", label: "Skirts" },
           { id: "clothing-co-ord-sets", label: "Co-Ord Sets" },
+        ],
+      },
+      {
+        id: "clothing-mens",
+        label: "Men's Wear",
+        subs: [
+          { id: "clothing-mens-jackets", label: "Jackets" },
+          { id: "clothing-mens-coats", label: "Coats" },
+          { id: "clothing-mens-trench-coats", label: "Trench Coats" },
         ],
       },
     ],
