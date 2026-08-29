@@ -187,6 +187,15 @@ export const collections: Collection[] = [
           { id: "clothing-co-ord-sets", label: "Co-Ord Sets" },
         ],
       },
+      {
+        id: "clothing-mens",
+        label: "Men's Wear",
+        subs: [
+          { id: "clothing-mens-jackets", label: "Jackets" },
+          { id: "clothing-mens-coats", label: "Coats" },
+          { id: "clothing-mens-trench-coats", label: "Trench Coats" },
+        ],
+      },
     ],
   },
   {
