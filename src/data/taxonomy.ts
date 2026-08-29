@@ -60,6 +60,9 @@ export type SubcategoryId =
   | "clothing-trousers"
   | "clothing-skirts"
   | "clothing-co-ord-sets"
+  | "clothing-mens-jackets"
+  | "clothing-mens-coats"
+  | "clothing-mens-trench-coats"
   // Crochet
   | "crochet-tote-bags"
   | "crochet-shoulder-bags"
