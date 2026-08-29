@@ -725,7 +725,7 @@ export const extraProducts: Product[] = [
     variants: [{ name: "Jet Black", swatch: "#111111", image: "/photos/clothing/mens/black-double-breasted-coat.jpeg" }],
     reviews: [
       r("Shahzad K.", "Karachi", 5, "Serious presence. Everyone asked where I got it.", "2026-08-05"),
-      r("Ahmed N.", "Rawalpindi", 5, "Great length — hits mid-calf on me at 5'10".", "2026-07-09"),
+      r("Ahmed N.", "Rawalpindi", 5, "Great length — hits mid-calf on me at 5 foot 10.", "2026-07-09"),
       r("Zain F.", "Lahore", 4, "Gorgeous, though it needs a hanger with strong shoulders.", "2026-06-19"),
     ],
   },
