@@ -65,7 +65,7 @@ export function CurrencySwitcher() {
                       setCurrency(c);
                       setOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm text-left transition ${
+                    className={`w-full min-h-11 flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm text-left transition ${
                       selected ? "bg-muted text-foreground" : "hover:bg-muted/60 text-muted-foreground hover:text-foreground"
                     }`}
                   >

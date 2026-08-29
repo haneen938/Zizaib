@@ -48,8 +48,8 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-gradient-to-b from-pink-100/95 via-pink-50/90 to-pink-50/70 border-b-2 border-pink-300/80 shadow-[0_2px_10px_-4px_rgba(244,114,182,0.35)]">
-      <nav className="container-page flex items-center justify-between gap-4 py-3">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-gradient-to-b from-pink-100/95 via-pink-50/90 to-pink-50/70 border-b-2 border-pink-300/80 shadow-[0_2px_10px_-4px_rgba(244,114,182,0.35)]">
+      <nav className="container-page flex items-center justify-between gap-2 py-3 sm:gap-4">
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <div className="relative size-20 shrink-0">
             <motion.span
@@ -181,9 +181,7 @@ export function Navbar() {
         </form>
 
         <div className="flex items-center gap-1 shrink-0">
-          <div className="mr-1">
-            <CurrencySwitcher />
-          </div>
+          <CurrencySwitcher />
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={toggleCart}
