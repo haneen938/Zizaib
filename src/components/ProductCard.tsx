@@ -7,6 +7,7 @@ import { safeImage, type Product } from "@/data/products";
 import { useMoney } from "@/lib/format";
 import { useCart } from "@/store/cartStore";
 import { flyToCart } from "@/lib/flyToCart";
+import { requiresSize } from "@/data/sizing";
 
 // Product card with hover lift + scroll-fade-in. Shows the first variant.
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
@@ -17,10 +18,21 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const money = useMoney();
   const imgRef = useRef<HTMLImageElement>(null);
   const navigate = useNavigate();
+  const needsSize = requiresSize(product);
+
+  // Sized garments can't be quick-added — send the shopper to the detail page
+  // where the size chart and picker live.
+  const goPickSize = () => {
+    toast.info("Please choose a size first", {
+      description: `${product.title} comes in Small to 4XL — pick yours on the product page.`,
+    });
+    navigate({ to: "/products/$id", params: { id: product.id } });
+  };
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (needsSize) return goPickSize();
     if (imgRef.current) flyToCart(imgRef.current, coverImage, product.title);
     // slight delay so the badge bumps as the image lands
     setTimeout(() => {
@@ -34,6 +46,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (needsSize) return goPickSize();
     addItem(product, { color: cover.name, image: coverImage });
     navigate({ to: "/checkout" });
   };
@@ -91,7 +104,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               aria-label={`Add ${product.title} to cart`}
               className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-foreground/70 bg-card px-3 py-2 min-h-11 text-xs sm:text-sm font-bold text-foreground transition hover:bg-secondary active:scale-95"
             >
-              <ShoppingBag className="size-4" /> Add to Cart
+              <ShoppingBag className="size-4" /> {needsSize ? "Select Size" : "Add to Cart"}
             </button>
             <button
               type="button"

@@ -48,7 +48,11 @@ function CartPage() {
                 <img src={item.image} alt={item.title} className="size-24 rounded-2xl object-cover" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold">{item.title}</p>
-                  {item.color && <p className="text-xs text-muted-foreground">{item.color}</p>}
+                  {(item.color || item.size) && (
+                    <p className="text-xs text-muted-foreground">
+                      {[item.color, item.size && `Size ${item.size}`].filter(Boolean).join(" · ")}
+                    </p>
+                  )}
                   <div className="mt-3 inline-flex items-center gap-1 rounded-full border border-border">
                     <button onClick={() => updateQty(item.id, item.qty - 1)} className="p-1.5 hover:bg-muted rounded-full">
                       <Minus className="size-3.5" />

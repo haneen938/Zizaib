@@ -26,6 +26,7 @@ const itemSchema = z.object({
   qty: z.number().int().positive().max(99),
   price: z.number().nonnegative(),
   color: z.string().max(60).optional(),
+  size: z.string().max(20).optional(),
 });
 
 const orderInput = z.object({
@@ -131,7 +132,7 @@ export const placeOrder = createServerFn({ method: "POST" })
         missing.push(item.title);
         return null;
       }
-      return { id: product.id, title: product.title, qty: item.qty, price: product.price, color: item.color };
+      return { id: product.id, title: product.title, qty: item.qty, price: product.price, color: item.color, size: item.size };
     }).filter((x): x is NonNullable<typeof x> => x !== null);
     if (missing.length > 0) {
       return {
