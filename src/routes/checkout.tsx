@@ -120,7 +120,9 @@ function Checkout() {
               <img src={i.image} alt="" className="size-14 rounded-xl object-cover" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{i.title}</p>
-                <p className="text-xs text-muted-foreground">{i.color ? `${i.color} · ` : ""}Qty {i.qty}</p>
+                <p className="text-xs text-muted-foreground">
+                  {[i.color, i.size && `Size ${i.size}`, `Qty ${i.qty}`].filter(Boolean).join(" · ")}
+                </p>
               </div>
               <span className="text-sm font-semibold">{money(i.price * i.qty)}</span>
             </li>
