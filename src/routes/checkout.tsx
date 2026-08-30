@@ -60,7 +60,7 @@ function Checkout() {
           notes: details.notes,
           method,
           total,
-          items: items.map((i) => ({ id: i.id, productId: i.productId, title: i.title, qty: i.qty, price: i.price, color: i.color ?? "" })),
+          items: items.map((i) => ({ id: i.id, productId: i.productId, title: i.title, qty: i.qty, price: i.price, color: i.color ?? "", size: i.size ?? "" })),
           ...(cash ? { cash } : {}),
         },
       });
