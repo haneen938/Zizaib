@@ -10,6 +10,7 @@ export interface CartItem {
   price: number;
   image: string;
   color?: string;
+  size?: string;
   qty: number;
 }
 
@@ -18,7 +19,7 @@ interface CartState {
   isOpen: boolean;
   addItem: (
     product: Product,
-    opts?: { color?: string; image?: string; qty?: number },
+    opts?: { color?: string; image?: string; qty?: number; size?: string },
   ) => void;
   removeItem: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
@@ -44,7 +45,8 @@ export const useCart = create<CartState>()(
           const color = opts.color ?? variant.name;
           const image = opts.image ?? variant.image;
           const qty = opts.qty ?? 1;
-          const key = `${product.id}__${color}`;
+          const size = opts.size;
+          const key = `${product.id}__${color}${size ? `__${size}` : ""}`;
           const existing = state.items.find((i) => i.id === key);
           if (existing) {
             return {
@@ -62,6 +64,7 @@ export const useCart = create<CartState>()(
                 price: product.price,
                 image,
                 color,
+                size,
                 qty,
               },
             ],

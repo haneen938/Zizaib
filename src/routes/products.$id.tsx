@@ -7,6 +7,8 @@ import { useCart } from "@/store/cartStore";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductReviews } from "@/components/ProductReviews";
 import { useMoney } from "@/lib/format";
+import { SizeChart, SizePicker } from "@/components/SizeGuide";
+import { sizesFor } from "@/data/sizing";
 
 export const Route = createFileRoute("/products/$id")({
   loader: ({ params }) => {
@@ -42,18 +44,42 @@ function ProductPage() {
   const navigate = useNavigate();
   const [colorIdx, setColorIdx] = useState(0);
   const [added, setAdded] = useState(false);
+  const sizes = sizesFor(product);
+  const [size, setSize] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState(false);
   const activeColor = product.variants[colorIdx];
 
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3);
 
+  // Sized garments cannot be bought without an explicit size choice.
+  const guardSize = () => {
+    if (sizes && !size) {
+      setSizeError(true);
+      document.getElementById("size-picker")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    setSizeError(false);
+    return true;
+  };
+
   const handleAdd = () => {
-    addItem(product, { color: activeColor.name, image: safeImage(product, activeColor.image) });
+    if (!guardSize()) return;
+    addItem(product, {
+      color: activeColor.name,
+      image: safeImage(product, activeColor.image),
+      ...(size ? { size } : {}),
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   };
 
   const handleBuyNow = () => {
-    addItem(product, { color: activeColor.name, image: safeImage(product, activeColor.image) });
+    if (!guardSize()) return;
+    addItem(product, {
+      color: activeColor.name,
+      image: safeImage(product, activeColor.image),
+      ...(size ? { size } : {}),
+    });
     navigate({ to: "/checkout" });
   };
 
@@ -95,6 +121,7 @@ function ProductPage() {
               </button>
             ))}
           </div>
+          {sizes && <SizeChart />}
         </div>
 
         {/* Details */}
@@ -123,6 +150,20 @@ function ProductPage() {
               ))}
             </div>
           </div>
+
+          {sizes && (
+            <div id="size-picker" className="mt-6 scroll-mt-28">
+              <SizePicker
+                sizes={sizes}
+                value={size}
+                error={sizeError}
+                onChange={(s) => {
+                  setSize(s);
+                  setSizeError(false);
+                }}
+              />
+            </div>
+          )}
 
           <div className="mt-8 flex flex-wrap gap-3">
             <motion.button

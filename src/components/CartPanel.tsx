@@ -57,7 +57,11 @@ export function CartPanel() {
                               <Trash2 className="size-4" />
                             </button>
                           </div>
-                          {item.color && <p className="text-xs text-muted-foreground">{item.color}</p>}
+                          {(item.color || item.size) && (
+                            <p className="text-xs text-muted-foreground">
+                              {[item.color, item.size && `Size ${item.size}`].filter(Boolean).join(" · ")}
+                            </p>
+                          )}
                           <div className="mt-2 flex items-center justify-between">
                             <div className="inline-flex items-center gap-1 rounded-full border border-border">
                               <button onClick={() => updateQty(item.id, item.qty - 1)} className="p-1.5 hover:bg-muted rounded-full" aria-label="Decrease">

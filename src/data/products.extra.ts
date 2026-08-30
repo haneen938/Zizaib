@@ -821,4 +821,72 @@ export const extraProducts: Product[] = [
       r("Sameer L.", "Karachi", 5, "Cape detail is beautifully finished.", "2026-07-13"),
     ],
   },
+  {
+    id: "mens-belted-leather-trench-coat",
+    title: "Belted Leather Trench Coat",
+    tagline: "Long, lean and cinched at the waist 🖤",
+    price: 32500,
+    category: "clothing",
+    taxon: "clothing-mens-trench-coats",
+    description: "Full-length black leather trench with a buckled waist belt.",
+    longDescription:
+      "A calf-length trench in supple black leather with a notch lapel, buckled waist belt, storm-flap shoulders and deep welt pockets. Fully lined for winter layering.",
+    variants: [{ name: "Black", swatch: "#131313", image: "/photos/clothing/mens/belted-leather-trench-coat.jpeg" }],
+    badge: "New",
+    reviews: [
+      r("Fahad S.", "Islamabad", 5, "The belt makes the whole silhouette. Turns heads.", "2026-08-24"),
+      r("Zain M.", "Lahore", 5, "Heavier leather than I expected — in a good way.", "2026-08-12"),
+    ],
+  },
+  {
+    id: "mens-shearling-coat",
+    title: "Mens Shearling Coat",
+    tagline: "Fur-lined warmth without the bulk 🧊",
+    price: 29900,
+    salePrice: 26500,
+    category: "clothing",
+    taxon: "clothing-mens-coats",
+    description: "Black leather coat with a plush shearling collar and lining.",
+    longDescription:
+      "A hip-length shearling coat in matte black leather, lined edge to edge with soft fleece and finished with a wide fold-down fur collar, button front and four roomy pockets.",
+    variants: [{ name: "Black", swatch: "#1a1a1a", image: "/photos/clothing/mens/mens-shearling-coat.jpeg" }],
+    badge: "Bestseller",
+    reviews: [
+      r("Adeel K.", "Murree", 5, "Wore it at 2°C and never needed a sweater under it.", "2026-08-19"),
+      r("Noman J.", "Karachi", 4, "Warm and well made — sizing runs generous.", "2026-07-30"),
+    ],
+  },
+  {
+    id: "mens-short-leather-trench-coat",
+    title: "Trench Coat Leather",
+    tagline: "The short trench that goes with everything 🤍",
+    price: 24500,
+    category: "clothing",
+    taxon: "clothing-mens-trench-coats",
+    description: "Hip-length black leather trench with a wide spread collar.",
+    longDescription:
+      "A shorter take on the trench in smooth black leather — wide spread collar, four-button front, yoked chest seam and buckled cuff tabs. Cut to sit at the hip so it layers over knitwear.",
+    variants: [{ name: "Black", swatch: "#111111", image: "/photos/clothing/mens/short-leather-trench-coat.jpeg" }],
+    reviews: [
+      r("Talha R.", "Rawalpindi", 5, "Perfect length for everyday. Collar sits beautifully.", "2026-08-21"),
+      r("Ibrahim Q.", "Multan", 5, "Soft leather, clean stitching throughout.", "2026-08-05"),
+    ],
+  },
+  {
+    id: "mens-single-breasted-trench-coat",
+    title: "Single Breasted Trench Coat",
+    tagline: "Brown leather, boardroom energy 🤎",
+    price: 31500,
+    category: "clothing",
+    taxon: "clothing-mens-trench-coats",
+    description: "Long single-breasted trench in distressed brown leather.",
+    longDescription:
+      "A tailored single-breasted trench in antiqued brown leather with a notch lapel, three-button closure, waist seam and slanted hip pockets. Falls below the knee for a sharp, formal line.",
+    variants: [{ name: "Brown", swatch: "#5b4331", image: "/photos/clothing/mens/single-breasted-trench-coat.jpeg" }],
+    badge: "New",
+    reviews: [
+      r("Saad B.", "Lahore", 5, "Colour is richer in person. Fits over a blazer easily.", "2026-08-26"),
+      r("Danish A.", "Islamabad", 5, "Looks far more expensive than it cost.", "2026-08-14"),
+    ],
+  },
 ];
