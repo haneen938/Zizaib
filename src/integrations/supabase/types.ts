@@ -17,6 +17,8 @@ export type Database = {
       orders: {
         Row: {
           address: string
+          address2: string | null
+          admin_notes: string | null
           cash_bank_name: string | null
           cash_receipt_url: string | null
           cash_reference_id: string | null
@@ -30,15 +32,19 @@ export type Database = {
           items: Json
           notes: string | null
           payment_method: string
+          payment_provider: string | null
           phone: string
           postal: string | null
           status: string
           total: number
           tracking_number: string
+          transaction_id: string | null
           updated_at: string
         }
         Insert: {
           address: string
+          address2?: string | null
+          admin_notes?: string | null
           cash_bank_name?: string | null
           cash_receipt_url?: string | null
           cash_reference_id?: string | null
@@ -52,15 +58,19 @@ export type Database = {
           items?: Json
           notes?: string | null
           payment_method: string
+          payment_provider?: string | null
           phone: string
           postal?: string | null
           status?: string
           total?: number
           tracking_number?: string
+          transaction_id?: string | null
           updated_at?: string
         }
         Update: {
           address?: string
+          address2?: string | null
+          admin_notes?: string | null
           cash_bank_name?: string | null
           cash_receipt_url?: string | null
           cash_reference_id?: string | null
@@ -74,11 +84,13 @@ export type Database = {
           items?: Json
           notes?: string | null
           payment_method?: string
+          payment_provider?: string | null
           phone?: string
           postal?: string | null
           status?: string
           total?: number
           tracking_number?: string
+          transaction_id?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -119,12 +131,40 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       generate_tracking_number: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       track_order: {
         Args: { _tracking_number: string }
         Returns: {
@@ -138,7 +178,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -265,6 +305,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
