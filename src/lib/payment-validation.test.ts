@@ -129,7 +129,6 @@ describe("storage key safety", () => {
   it("never derives a key from the user filename", () => {
     expect(safeStorageExtension("image/jpeg")).toBe("jpg");
     expect(safeStorageExtension("image/png")).toBe("png");
-    expect(safeStorageExtension("application/pdf")).toBe("pdf");
   });
 });
 

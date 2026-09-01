@@ -32,7 +32,7 @@ function Checkout() {
   const submitOrder = useServerFn(placeOrder);
 
   const [step, setStep] = useState<"shipping" | "payment">("shipping");
-  const [details, setDetails] = useState<ShippingDetails>({ fullName: "", email: "", phone: "", address: "", city: "", postal: "", notes: "" });
+  const [details, setDetails] = useState<ShippingDetails>({ fullName: "", email: "", phone: "", address: "", address2: "", city: "", postal: "", notes: "" });
 
   const shipping = shippingFor(subtotal, items.length);
   const total = subtotal + shipping;
@@ -55,6 +55,7 @@ function Checkout() {
           email: details.email,
           phone: details.phone,
           address: details.address,
+          address2: details.address2,
           city: details.city,
           postal: details.postal,
           notes: details.notes,
@@ -69,7 +70,7 @@ function Checkout() {
         return;
       }
       clear();
-      navigate({ to: "/confirmation", search: { o: res.trackingNumber, m: method } });
+      navigate({ to: "/confirmation", search: { o: res.trackingNumber, m: method, tot: res.total } });
 
     } catch {
       toast.error("We couldn't save your order. Please try again in a moment.");

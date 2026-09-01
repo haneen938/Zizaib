@@ -1,14 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Check, Truck, Package, Copy } from "lucide-react";
+import { Check, Truck, Package, Copy, FileDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { z } from "zod";
+import { useMoney } from "@/store/currencyStore";
+import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
 const search = z.object({
   o: z.string().default("YC-XXXXXX"),
   m: z.enum(["card", "bank", "cash"]).default("card"),
+  tot: z.coerce.number().nonnegative().optional(),
 });
+
 
 export const Route = createFileRoute("/confirmation")({
   validateSearch: search,
@@ -32,10 +36,13 @@ const MILESTONES = ["Warehouse", "Shipped", "On the Way", "Delivered"] as const;
 const POSITIONS = [4, 36, 68, 96];
 
 function Confirmation() {
-  const { o, m } = Route.useSearch() as z.infer<typeof search>;
+  const { o, m, tot } = Route.useSearch() as z.infer<typeof search>;
   const [stage, setStage] = useState(2); // index of active milestone; starts at "On the Way"
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const money = useMoney();
   const firedConfetti = useRef(false);
+
 
   useEffect(() => {
     if (firedConfetti.current) return;
@@ -91,6 +98,27 @@ function Confirmation() {
           <Link to="/track" search={{ t: o }} className="btn-primary">
             <Truck className="size-4" /> Track this order
           </Link>
+          <button
+            type="button"
+            disabled={downloading}
+            onClick={async () => {
+              setDownloading(true);
+              try {
+                await downloadReceiptPdf({
+                  trackingNumber: o,
+                  method: m,
+                  total: tot !== undefined ? money(tot) : "—",
+                  status: MILESTONES[stage],
+                });
+              } finally {
+                setDownloading(false);
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground/60 bg-card px-4 py-2 min-h-11 text-sm font-bold disabled:opacity-60"
+          >
+            <FileDown className="size-4" /> {downloading ? "Preparing…" : "Download receipt (PDF)"}
+          </button>
+
         </div>
         <p className="mt-3 text-xs text-muted-foreground">Save this number — you'll need it to check your shipment status.</p>
       </div>
