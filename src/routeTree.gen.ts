@@ -20,8 +20,10 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as BestSellersRouteImport } from './routes/best-sellers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
+import { Route as AuthenticatedAdminCategoryImagesRouteImport } from './routes/_authenticated/admin.category-images'
 import { Route as ApiPublicCategoryImageSplatRouteImport } from './routes/api/public/category-image.$'
 
 const TrackRoute = TrackRouteImport.update({
@@ -79,6 +81,10 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -89,6 +95,12 @@ const ProductsIdRoute = ProductsIdRouteImport.update({
   path: '/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminCategoryImagesRoute =
+  AuthenticatedAdminCategoryImagesRouteImport.update({
+    id: '/admin/category-images',
+    path: '/admin/category-images',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicCategoryImageSplatRoute =
   ApiPublicCategoryImageSplatRouteImport.update({
     id: '/api/public/category-image/$',
@@ -110,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/admin/category-images': typeof AuthenticatedAdminCategoryImagesRoute
   '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRoutesByTo {
@@ -126,11 +139,13 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/admin/category-images': typeof AuthenticatedAdminCategoryImagesRoute
   '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/best-sellers': typeof BestSellersRoute
@@ -143,6 +158,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/_authenticated/admin/category-images': typeof AuthenticatedAdminCategoryImagesRoute
   '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRouteTypes {
@@ -161,6 +177,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/admin/category-images'
     | '/api/public/category-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -177,10 +194,12 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/admin/category-images'
     | '/api/public/category-image/$'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
     | '/auth'
     | '/best-sellers'
@@ -193,11 +212,13 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/_authenticated/admin/category-images'
     | '/api/public/category-image/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   BestSellersRoute: typeof BestSellersRoute
@@ -292,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -306,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/category-images': {
+      id: '/_authenticated/admin/category-images'
+      path: '/admin/category-images'
+      fullPath: '/admin/category-images'
+      preLoaderRoute: typeof AuthenticatedAdminCategoryImagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/category-image/$': {
       id: '/api/public/category-image/$'
       path: '/api/public/category-image/$'
@@ -316,8 +351,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminCategoryImagesRoute: typeof AuthenticatedAdminCategoryImagesRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminCategoryImagesRoute: AuthenticatedAdminCategoryImagesRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   BestSellersRoute: BestSellersRoute,
