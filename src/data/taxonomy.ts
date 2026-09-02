@@ -8,7 +8,7 @@
 // what renders in the menu and in the 2-tier shop pills.
 // ─────────────────────────────────────────────────────────────
 
-export type CollectionId = "bags" | "jewelry" | "clothing" | "crochet" | "makeup";
+export type CollectionId = "bags" | "jewelry" | "clothing" | "crochet" | "makeup" | "grocery";
 
 export interface Subcategory {
   id: SubcategoryId;
