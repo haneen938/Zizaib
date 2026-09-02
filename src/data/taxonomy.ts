@@ -275,6 +275,32 @@ export const collections: Collection[] = [
       },
     ],
   },
+  {
+    id: "grocery",
+    label: "Grocery",
+    emoji: "🧺",
+    blurb: "Everyday little things — keychains, hair pieces, hand warmers, bracelets and the rest.",
+    groups: [
+      {
+        id: "grocery-essentials",
+        label: "Grocery Essentials",
+        subs: [
+          { id: "grocery-keychain", label: "Keychain" },
+          { id: "grocery-hair-accessories", label: "Hair Accessories" },
+          { id: "grocery-hair", label: "Hair" },
+        ],
+      },
+      {
+        id: "grocery-wearables",
+        label: "Hand & Wrist",
+        subs: [
+          { id: "grocery-hand", label: "Hand" },
+          { id: "grocery-bracelets", label: "Bracelets" },
+          { id: "grocery-misc", label: "Miscellaneous / Rest Things" },
+        ],
+      },
+    ],
+  },
 ];
 
 export const collectionIds = collections.map((c) => c.id) as [CollectionId, ...CollectionId[]];
