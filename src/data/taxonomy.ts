@@ -8,7 +8,7 @@
 // what renders in the menu and in the 2-tier shop pills.
 // ─────────────────────────────────────────────────────────────
 
-export type CollectionId = "bags" | "jewelry" | "clothing" | "crochet" | "makeup";
+export type CollectionId = "bags" | "jewelry" | "clothing" | "crochet" | "makeup" | "grocery";
 
 export interface Subcategory {
   id: SubcategoryId;
@@ -82,7 +82,14 @@ export type SubcategoryId =
   | "makeup-eyeshadow"
   | "makeup-lipstick"
   | "makeup-lip-gloss"
-  | "makeup-lip-liner";
+  | "makeup-lip-liner"
+  // Grocery
+  | "grocery-keychain"
+  | "grocery-hair-accessories"
+  | "grocery-hair"
+  | "grocery-hand"
+  | "grocery-bracelets"
+  | "grocery-misc";
 
 export const collections: Collection[] = [
   {
@@ -264,6 +271,32 @@ export const collections: Collection[] = [
           { id: "makeup-lipstick", label: "Lipstick" },
           { id: "makeup-lip-gloss", label: "Lip Gloss" },
           { id: "makeup-lip-liner", label: "Lip Liner" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "grocery",
+    label: "Grocery",
+    emoji: "🧺",
+    blurb: "Everyday little things — keychains, hair pieces, hand warmers, bracelets and the rest.",
+    groups: [
+      {
+        id: "grocery-essentials",
+        label: "Grocery Essentials",
+        subs: [
+          { id: "grocery-keychain", label: "Keychain" },
+          { id: "grocery-hair-accessories", label: "Hair Accessories" },
+          { id: "grocery-hair", label: "Hair" },
+        ],
+      },
+      {
+        id: "grocery-wearables",
+        label: "Hand & Wrist",
+        subs: [
+          { id: "grocery-hand", label: "Hand" },
+          { id: "grocery-bracelets", label: "Bracelets" },
+          { id: "grocery-misc", label: "Miscellaneous / Rest Things" },
         ],
       },
     ],
