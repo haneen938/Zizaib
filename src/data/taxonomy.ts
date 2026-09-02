@@ -82,7 +82,14 @@ export type SubcategoryId =
   | "makeup-eyeshadow"
   | "makeup-lipstick"
   | "makeup-lip-gloss"
-  | "makeup-lip-liner";
+  | "makeup-lip-liner"
+  // Grocery
+  | "grocery-keychain"
+  | "grocery-hair-accessories"
+  | "grocery-hair"
+  | "grocery-hand"
+  | "grocery-bracelets"
+  | "grocery-misc";
 
 export const collections: Collection[] = [
   {
