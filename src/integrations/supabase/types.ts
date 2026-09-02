@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      category_images: {
+        Row: {
+          alt: string | null
+          created_at: string
+          id: string
+          image_url: string
+          ref_key: string
+          scope: string
+          updated_at: string
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          ref_key: string
+          scope: string
+          updated_at?: string
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          ref_key?: string
+          scope?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string
