@@ -21,6 +21,7 @@ import { Route as BestSellersRouteImport } from './routes/best-sellers'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
+import { Route as ApiPublicCategoryImageSplatRouteImport } from './routes/api/public/category-image.$'
 
 const TrackRoute = TrackRouteImport.update({
   id: '/track',
@@ -82,6 +83,12 @@ const ProductsIdRoute = ProductsIdRouteImport.update({
   path: '/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCategoryImageSplatRoute =
+  ApiPublicCategoryImageSplatRouteImport.update({
+    id: '/api/public/category-image/$',
+    path: '/api/public/category-image/$',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +134,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/track': typeof TrackRoute
   '/products/$id': typeof ProductsIdRoute
+  '/api/public/category-image/$': typeof ApiPublicCategoryImageSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/api/public/category-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/api/public/category-image/$'
   id:
     | '__root__'
     | '/'
@@ -169,6 +181,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/track'
     | '/products/$id'
+    | '/api/public/category-image/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +197,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   TrackRoute: typeof TrackRoute
   ProductsIdRoute: typeof ProductsIdRoute
+  ApiPublicCategoryImageSplatRoute: typeof ApiPublicCategoryImageSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/category-image/$': {
+      id: '/api/public/category-image/$'
+      path: '/api/public/category-image/$'
+      fullPath: '/api/public/category-image/$'
+      preLoaderRoute: typeof ApiPublicCategoryImageSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,6 +309,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   TrackRoute: TrackRoute,
   ProductsIdRoute: ProductsIdRoute,
+  ApiPublicCategoryImageSplatRoute: ApiPublicCategoryImageSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
