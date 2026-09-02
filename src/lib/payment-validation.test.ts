@@ -18,9 +18,9 @@ const b64 = (bytes: number[], padTo = 0) => {
   for (const b of all) bin += String.fromCharCode(b);
   return btoa(bin);
 };
-const JPEG = (size = 3000) => b64([0xff, 0xd8, 0xff, 0xe0], size);
-const PNG = (size = 3000) => b64([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], size);
-const PDF = (size = 3000) => b64([..."%PDF-1.7"].map((c) => c.charCodeAt(0)), size);
+const JPEG = (size = 30000) => b64([0xff, 0xd8, 0xff, 0xe0], size);
+const PNG = (size = 30000) => b64([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], size);
+const PDF = (size = 30000) => b64([..."%PDF-1.7"].map((c) => c.charCodeAt(0)), size);
 
 describe("provider", () => {
   it("accepts a listed provider", () => {
@@ -53,7 +53,7 @@ describe("transaction id", () => {
 
 describe("receipt metadata", () => {
   it("accepts a valid jpeg", () => {
-    expect(validateReceiptMeta({ fileName: "slip.jpg", contentType: "image/jpeg", size: 2048 })).toBeUndefined();
+    expect(validateReceiptMeta({ fileName: "slip.jpg", contentType: "image/jpeg", size: 40960 })).toBeUndefined();
   });
   it("requires a file", () => {
     expect(validateReceiptMeta(null)).toBe(GENERIC_ERROR);
@@ -73,10 +73,10 @@ describe("receipt metadata", () => {
 });
 
 describe("magic byte sniffing", () => {
-  it("identifies jpeg, png and pdf", () => {
+  it("identifies jpeg and png, and rejects pdf", () => {
     expect(sniffReceiptType(JPEG())).toBe("image/jpeg");
     expect(sniffReceiptType(`data:image/png;base64,${PNG()}`)).toBe("image/png");
-    expect(sniffReceiptType(PDF())).toBe("application/pdf");
+    expect(sniffReceiptType(PDF())).toBeNull();
   });
   it("returns null for unknown bytes", () => {
     expect(sniffReceiptType(b64([0x4d, 0x5a, 0x90, 0x00], 100))).toBeNull();
@@ -90,10 +90,10 @@ describe("server receipt payload validation", () => {
       validateReceiptPayload({ fileName: "slip.jpg", contentType: "image/jpeg", dataBase64: `data:image/jpeg;base64,${JPEG()}` }),
     ).toBeUndefined();
   });
-  it("accepts a genuine pdf upload", () => {
+  it("rejects a pdf upload (images only)", () => {
     expect(
       validateReceiptPayload({ fileName: "slip.pdf", contentType: "application/pdf", dataBase64: PDF() }),
-    ).toBeUndefined();
+    ).toBe(GENERIC_ERROR);
   });
   it("rejects an executable renamed to .png", () => {
     expect(
@@ -133,16 +133,16 @@ describe("storage key safety", () => {
 });
 
 describe("validateReviewImage", () => {
-  const jpeg = btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0));
+  const jpeg = JPEG();
   it("accepts a real jpeg", () => {
     expect(validateReviewImage({ fileName: "a.jpg", contentType: "image/jpeg", dataBase64: jpeg })).toBe("image/jpeg");
   });
   it("rejects a pdf posing as a review photo", () => {
-    const pdf = btoa("%PDF-1.4 fake payload");
+    const pdf = PDF();
     expect(validateReviewImage({ fileName: "a.jpg", contentType: "image/jpeg", dataBase64: pdf })).toBeNull();
   });
   it("rejects a renamed script", () => {
-    const html = btoa("<script>alert(1)</script>padding");
+    const html = btoa("<script>alert(1)</script>padding-padding-padding");
     expect(validateReviewImage({ fileName: "a.png", contentType: "image/png", dataBase64: html })).toBeNull();
   });
 });
