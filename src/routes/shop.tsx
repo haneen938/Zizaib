@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { ShoppingBag, Gem, Shirt, Sparkles, Brush } from "lucide-react";
+import { ShoppingBag, Gem, Shirt, Sparkles, Brush, ShoppingCart } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { products, matchesGender, taxonOf, type Gender } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
@@ -23,6 +23,7 @@ const collectionIcon: Record<CollectionId, LucideIcon> = {
   clothing: Shirt,
   crochet: Sparkles,
   makeup: Brush,
+  grocery: ShoppingCart,
 };
 
 const search = z.object({
