@@ -37,10 +37,11 @@ function TrackPage() {
   const [value, setValue] = useState(t);
   const lookup = useServerFn(trackOrder);
 
-  const { data, isFetching, isError } = useQuery({
+  const { data, isFetching, isError, error, refetch } = useQuery({
     queryKey: ["track", t],
     queryFn: () => lookup({ data: { trackingNumber: t } }),
     enabled: t.trim().length >= 4,
+    retry: 1,
   });
 
   const stageIndex = data ? Math.max(0, STAGES.indexOf(data.status as (typeof STAGES)[number])) : 0;
@@ -73,18 +74,39 @@ function TrackPage() {
       </form>
 
       {isFetching && (
-        <p className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" /> Looking up your parcel…
-        </p>
+        <div aria-live="polite" className="card-soft mt-8 p-6" data-testid="track-loading">
+          <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="size-4 animate-spin" /> Looking up your parcel…
+          </p>
+          <div className="mt-5 space-y-3" aria-hidden="true">
+            <div className="h-5 w-1/2 animate-pulse rounded-full bg-muted" />
+            <div className="h-3 w-2/3 animate-pulse rounded-full bg-muted" />
+            <div className="h-3 w-1/3 animate-pulse rounded-full bg-muted" />
+          </div>
+        </div>
       )}
 
-      {!isFetching && t.trim().length >= 4 && (isError || data === null) && (
-        <div className="card-soft mt-8 p-6 text-center">
+      {!isFetching && t.trim().length >= 4 && isError && (
+        <div role="alert" className="card-soft mt-8 p-6 text-center" data-testid="track-error">
+          <AlertTriangle className="mx-auto size-8 text-destructive" />
+          <p className="mt-3 font-semibold">We couldn’t reach the tracking service.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "Please check your connection and try again."}
+          </p>
+          <button type="button" onClick={() => void refetch()} className="btn-primary mt-4 mx-auto">
+            <RefreshCw className="size-4" /> Try again
+          </button>
+        </div>
+      )}
+
+      {!isFetching && !isError && t.trim().length >= 4 && data === null && (
+        <div role="status" className="card-soft mt-8 p-6 text-center" data-testid="track-empty">
           <Package className="mx-auto size-8 text-muted-foreground" />
           <p className="mt-3 font-semibold">No order found for “{t}”.</p>
           <p className="mt-1 text-sm text-muted-foreground">Double-check the number in your confirmation email — it starts with <span className="font-mono">ZB</span>.</p>
         </div>
       )}
+
 
       {!isFetching && data && (
         <div className="card-soft mt-8 p-6">
