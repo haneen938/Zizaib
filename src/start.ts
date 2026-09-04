@@ -1,7 +1,7 @@
 import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+import { attachSupabaseAuthSafely } from "@/lib/supabase-auth-attacher";
 
 // Every cookie the server sets leaves with HttpOnly, Secure and SameSite=Lax,
 // so session-style cookies can never be read by JavaScript (XSS-proof) and are
@@ -43,7 +43,7 @@ const securityMiddleware = createMiddleware().server(async ({ next }) => {
 });
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: [attachSupabaseAuth],
+  functionMiddleware: [attachSupabaseAuthSafely],
   requestMiddleware: [securityMiddleware],
 }));
 

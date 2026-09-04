@@ -1,13 +1,8 @@
 const zizaibLogo = { url: "/photos/brand/zizaib-z-logo.png" };
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Mail, MessageCircle, Music2, Ghost, Heart, MessageSquare, Pin } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
+import { socials } from "@/data/socials";
 
-const socials = [
-  { label: "Instagram", href: "https://www.instagram.com/zizaib2026?igsh=MTZncXRiNHA3djhyNA==", Icon: Instagram },
-  { label: "TikTok", href: "https://www.tiktok.com/@zizaib8?_r=1&_t=ZS-986vle6odtN", Icon: Music2 },
-  { label: "Pinterest", href: "https://pin.it/3DZm8O0na", Icon: Pin },
-  { label: "Reddit", href: "https://www.reddit.com/u/ZIZAIB/s/glHXKUCRYq", Icon: MessageSquare },
-];
 
 export function Footer() {
   return (
