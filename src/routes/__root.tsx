@@ -15,6 +15,7 @@ import { Footer } from "@/components/Footer";
 import { CartPanel } from "@/components/CartPanel";
 import { Toaster } from "@/components/ui/sonner";
 import { SiteBackground } from "@/components/SiteBackground";
+import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 
 function NotFoundComponent() {
   return (
@@ -106,6 +107,7 @@ function RootComponent() {
         </main>
         <Footer />
         <CartPanel />
+        <WhatsAppWidget />
         <Toaster position="top-right" richColors />
       </div>
     </QueryClientProvider>

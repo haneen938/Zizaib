@@ -21,7 +21,31 @@ function hardenCookies(response: Response): Response {
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
 
-const securityMiddleware = createMiddleware().server(async ({ next }) => {
+// CSRF: state-changing requests must come from our own origin. Browsers always
+// send Origin (or at least Referer) on cross-site POSTs, so a mismatch means the
+// request was forged by another site and is rejected before any handler runs.
+const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
+function isCrossSite(request: Request): boolean {
+  if (SAFE_METHODS.has(request.method.toUpperCase())) return false;
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!host) return false;
+  const source = request.headers.get("origin") ?? request.headers.get("referer");
+  if (!source) return true; // no provenance on a write → treat as forged
+  try {
+    return new URL(source).host !== host;
+  } catch {
+    return true;
+  }
+}
+
+const securityMiddleware = createMiddleware().server(async ({ next, request }) => {
+  if (request instanceof Request && isCrossSite(request)) {
+    return new Response("Cross-site request blocked", {
+      status: 403,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
   try {
     const result = await next();
     const response = (result as { response?: unknown }).response;
