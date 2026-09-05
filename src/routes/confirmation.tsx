@@ -7,7 +7,7 @@ import { z } from "zod";
 import { useMoney } from "@/store/currencyStore";
 import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 
-const search = z.object({
+export const search = z.object({
   o: z.string().default("YC-XXXXXX"),
   m: z.enum(["card", "bank", "cash"]).default("card"),
   tot: z.coerce.number().nonnegative().optional(),

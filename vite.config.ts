@@ -34,7 +34,8 @@ export default defineConfig(({ command }) => ({
     ...(command === "build"
       ? [
           nitro({
-            preset: "cloudflare-module",
+            // Vercel builds set NITRO_PRESET=vercel; Lovable keeps the default.
+            preset: process.env["NITRO_PRESET"] ?? "cloudflare-module",
             output: { dir: "dist", serverDir: "dist/server", publicDir: "dist/client" },
             cloudflare: { nodeCompat: true, deployConfig: true },
           }),

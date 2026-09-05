@@ -61,7 +61,16 @@ export function Footer() {
           <h4 className="font-semibold mb-3">Reach us</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2"><Mail className="size-4" /> Zizaib71@gmail.com</li>
-            <li className="flex items-center gap-2"><MessageCircle className="size-4" /> WhatsApp: +92&nbsp;300&nbsp;0000000</li>
+            <li>
+              <a
+                href="https://wa.me/923124855863"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-foreground"
+              >
+                <MessageCircle className="size-4" /> WhatsApp: +92&nbsp;312&nbsp;4855863
+              </a>
+            </li>
           </ul>
           <p className="mt-3 text-xs text-muted-foreground">Replies within 24 hrs, Mon–Sat.</p>
         </div>
