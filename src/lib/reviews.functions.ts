@@ -53,7 +53,7 @@ function client() {
 }
 
 export const listReviews = createServerFn({ method: "GET" })
-  .inputValidator((data: { productId: string }) => z.object({ productId: z.string().trim().min(1) }).parse(data))
+  .validator((data: { productId: string }) => z.object({ productId: z.string().trim().min(1) }).parse(data))
   .handler(async ({ data }) => {
     const { data: rows, error } = await client()
       .from("product_reviews")
@@ -68,7 +68,7 @@ export const listReviews = createServerFn({ method: "GET" })
 export type AddReviewResult = { ok: true; review: ReviewRow } | { ok: false; error: string };
 
 export const addReview = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => reviewInput.parse(data))
+  .validator((data: unknown) => reviewInput.parse(data))
   .handler(async ({ data }): Promise<AddReviewResult> => {
     const wait = throttle("review", REVIEW_WINDOWS);
     if (wait !== null) {

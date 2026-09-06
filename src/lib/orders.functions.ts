@@ -90,7 +90,7 @@ export type PlaceOrderResult =
   | { ok: false; error: string };
 
 export const placeOrder = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => orderInput.parse(data))
+  .validator((data: unknown) => orderInput.parse(data))
   .handler(async ({ data }): Promise<PlaceOrderResult> => {
     const wait = throttle("order", ORDER_WINDOWS);
     if (wait !== null) {
@@ -238,7 +238,7 @@ export type TrackingResult = {
 } | null;
 
 export const trackOrder = createServerFn({ method: "GET" })
-  .inputValidator((data: { trackingNumber: string }) =>
+  .validator((data: { trackingNumber: string }) =>
     z.object({ trackingNumber: z.string().trim().min(4).max(40) }).parse(data),
   )
   .handler(async ({ data }): Promise<TrackingResult> => {

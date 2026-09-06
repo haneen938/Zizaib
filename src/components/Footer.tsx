@@ -1,7 +1,9 @@
 const zizaibLogo = { url: "/photos/brand/zizaib-z-logo.png" };
 import { Link } from "@tanstack/react-router";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, Users } from "lucide-react";
 import { socials } from "@/data/socials";
+import { WHATSAPP_COMMUNITY_LINK } from "@/components/WhatsAppWidget";
+
 
 
 export function Footer() {
@@ -71,7 +73,18 @@ export function Footer() {
                 <MessageCircle className="size-4" /> WhatsApp: +92&nbsp;312&nbsp;4855863
               </a>
             </li>
+            <li>
+              <a
+                href={WHATSAPP_COMMUNITY_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-foreground"
+              >
+                <Users className="size-4" /> Join our WhatsApp community
+              </a>
+            </li>
           </ul>
+
           <p className="mt-3 text-xs text-muted-foreground">Replies within 24 hrs, Mon–Sat.</p>
         </div>
       </div>

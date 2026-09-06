@@ -82,7 +82,7 @@ async function assertAdmin(context: { supabase: ReturnType<typeof publicClient>;
 
 export const saveCategoryImage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => saveInput.parse(data))
+  .validator((data: unknown) => saveInput.parse(data))
   .handler(async ({ data, context }): Promise<SaveResult> => {
     try {
       await assertAdmin(context as never);
@@ -126,7 +126,7 @@ export const saveCategoryImage = createServerFn({ method: "POST" })
 
 export const deleteCategoryImage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) =>
+  .validator((data: unknown) =>
     z.object({ scope: z.enum(["collection", "group", "subcategory"]), refKey: z.string().trim().min(1).max(80) }).parse(data),
   )
   .handler(async ({ data, context }): Promise<{ ok: boolean; error?: string }> => {

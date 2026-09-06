@@ -60,6 +60,9 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
   const transferValid = !Object.values(transferErrors).some(Boolean);
   const showErr = (k: keyof typeof transferErrors) => (touched[k] ? transferErrors[k] : undefined);
 
+  const cardDigits = card.replace(/\D/g, "");
+  const brand = detectBrand(cardDigits);
+
   const formatCard = (val: string) =>
     val.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
   const formatExpiry = (val: string) =>
@@ -129,16 +132,13 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
       return;
     }
     const newErrors = {
-      name: name.trim() === "",
-      card: card.replace(/\s/g, "").length < 16,
-      expiry: expiry.length < 5,
+      name: name.trim().length < 2,
+      card: cardDigits.length < 16 || !luhnValid(cardDigits),
+      expiry: !expiryValid(expiry),
       cvv: cvv.length < 3,
     };
     setErrors(newErrors);
-    if (Object.values(newErrors).some(Boolean)) {
-      setTimeout(() => setErrors({ name: false, card: false, expiry: false, cvv: false }), 500);
-      return;
-    }
+    if (Object.values(newErrors).some(Boolean)) return;
     setStatus("processing");
     setTimeout(() => {
       setStatus("success");
@@ -406,7 +406,7 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
               <div className="flip-face bg-primary text-primary-foreground p-6 shadow-2xl">
                 <div className="flex justify-between items-start">
                   <div className="size-10 rounded-lg bg-yellow-300/90" />
-                  <span className="font-display font-black italic text-xl tracking-wider">VISA</span>
+                  <span className="font-display font-black italic text-xl tracking-wider">{brand}</span>
                 </div>
                 <div className="mt-6 font-mono text-lg sm:text-xl tracking-widest">
                   {card || "•••• •••• •••• ••••"}
@@ -470,6 +470,7 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
                       errors.name ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-primary/50"
                     }`}
                   />
+                  {errors.name && <p className="mt-1 text-xs font-medium text-destructive">Please enter the name printed on your card.</p>}
                 </div>
 
                 <div className={`mt-4 ${errors.card ? "animate-shake" : ""}`}>
@@ -486,6 +487,7 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
                     />
                     <Lock className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   </div>
+                  {errors.card && <p className="mt-1 text-xs font-medium text-destructive">That card number doesn't look valid.</p>}
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3">
@@ -500,6 +502,7 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
                         errors.expiry ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-primary/50"
                       }`}
                     />
+                    {errors.expiry && <p className="mt-1 text-xs font-medium text-destructive">Use a future MM/YY date.</p>}
                   </div>
                   <div className={errors.cvv ? "animate-shake" : ""}>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">CVV</label>
@@ -514,6 +517,7 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
                         errors.cvv ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-primary/50"
                       }`}
                     />
+                    {errors.cvv && <p className="mt-1 text-xs font-medium text-destructive">3 digits.</p>}
                   </div>
                 </div>
 
@@ -524,7 +528,8 @@ export default function PaymentCheckoutAnimation({ amount, onPay }: Props) {
 
                 <button
                   onClick={handlePay}
-                  className="mt-4 w-full rounded-xl bg-primary text-primary-foreground py-3.5 font-semibold tracking-wide hover:brightness-110 active:scale-[0.98] transition shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
+                  disabled={status !== "form"}
+                  className="mt-4 w-full rounded-xl disabled:opacity-60 disabled:cursor-not-allowed bg-primary text-primary-foreground py-3.5 font-semibold tracking-wide hover:brightness-110 active:scale-[0.98] transition shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
                 >
                   <Lock className="size-4" /> PAY {money(amount)} NOW
                 </button>
@@ -665,4 +670,38 @@ function Bill({ className = "" }: { className?: string }) {
       <circle cx="35" cy="12" r="1.2" fill="#047857" />
     </svg>
   );
+}
+
+function luhnValid(digits: string): boolean {
+  let sum = 0;
+  let double = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let d = Number(digits[i]);
+    if (double) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
+    sum += d;
+    double = !double;
+  }
+  return digits.length > 0 && sum % 10 === 0;
+}
+
+function expiryValid(value: string): boolean {
+  const m = /^(\d{2})\/(\d{2})$/.exec(value);
+  if (!m) return false;
+  const month = Number(m[1]);
+  const year = 2000 + Number(m[2]);
+  if (month < 1 || month > 12) return false;
+  const now = new Date();
+  const end = new Date(year, month, 1);
+  return end > now;
+}
+
+function detectBrand(digits: string): string {
+  if (/^4/.test(digits)) return "VISA";
+  if (/^(5[1-5]|2[2-7])/.test(digits)) return "MASTERCARD";
+  if (/^3[47]/.test(digits)) return "AMEX";
+  if (/^62/.test(digits)) return "UNIONPAY";
+  return "CARD";
 }

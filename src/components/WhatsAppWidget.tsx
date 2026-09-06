@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, ShoppingBag, Star } from "lucide-react";
+import { MessageCircle, X, ShoppingBag, Star, Users } from "lucide-react";
 
 export const WHATSAPP_NUMBER = "923124855863";
 
@@ -11,6 +11,8 @@ const ORDER_MESSAGE =
   "Hi! I would like to place an order from your website. Please help me with the process.";
 const REVIEW_MESSAGE =
   "Hi! I want to share my feedback and leave a review about my experience.";
+
+export const WHATSAPP_COMMUNITY_LINK = "https://chat.whatsapp.com/LJtZ8YBl5EhKPDeq5lacS6";
 
 export function WhatsAppWidget() {
   const [open, setOpen] = useState(false);
@@ -66,6 +68,14 @@ export function WhatsAppWidget() {
             >
               <Star className="size-4" /> ⭐ Leave a Review / Feedback
             </a>
+            <a
+              href={WHATSAPP_COMMUNITY_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 w-full rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 px-4 py-3 text-sm font-semibold text-foreground hover:bg-[#25D366]/20 transition"
+            >
+              <Users className="size-4" /> 👥 Join our WhatsApp Community
+            </a>
             <p className="pt-1 text-center text-[11px] text-muted-foreground">
               We usually reply within a few minutes.
             </p>
@@ -81,7 +91,7 @@ export function WhatsAppWidget() {
       >
         <span
           aria-hidden
-          className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-ping"
+          className="pointer-events-none absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-ping"
         />
         <MessageCircle className="relative size-7" />
       </button>
