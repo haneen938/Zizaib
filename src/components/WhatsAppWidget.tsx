@@ -91,7 +91,7 @@ export function WhatsAppWidget() {
       >
         <span
           aria-hidden
-          className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-ping"
+          className="pointer-events-none absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-ping"
         />
         <MessageCircle className="relative size-7" />
       </button>
