@@ -1,7 +1,9 @@
 const zizaibLogo = { url: "/photos/brand/zizaib-z-logo.png" };
 import { Link } from "@tanstack/react-router";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, Users } from "lucide-react";
 import { socials } from "@/data/socials";
+import { WHATSAPP_COMMUNITY_LINK } from "@/components/WhatsAppWidget";
+
 
 
 export function Footer() {
